@@ -52,74 +52,74 @@
       location = '/login.html'
     }
 
-    async function getProfile() {
-      try {
-        const { data: user } = await axios.get('/api/users/profile', {
+    function getProfile() {
+
+      axios.get('/api/users/profile', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+
+      }).then(res => {
+        console.log(res.data)
+        let posts = res.data.posts
+
+        posts.forEach(post => {
+          const postElem = document.createElement('div')
+          postElem.innerHTML = `
+              <div class="row bg-light p-5 rounded-md mb-2 mt-2">
+                <h3>${post.title}</h3>
+                <p class="lead">${post.body}</p>
+                <button class="delete" data-postid="${post.id}"> Delete </button>
+                <button class= "edit" data-postid="${post.id}"> Edit </button>
+                <hr class="my-4">
+              </div>
+            `
+          document.getElementById('posts').prepend(postElem)
+        });
+      })
+
+    }
+    document.addEventListener('click', event => {
+      if (event.target.classList.contains('delete')) {
+        axios.delete(`/api/posts/${event.target.dataset.postid}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         })
-        return user
-
-      } catch (err) {
-        location = '/login.html'
+          .then(res => { location = '/profile.html' })
+          .catch(err => (console.log(err)))
       }
-    }
+    })
+    document.addEventListener('click', event => {
+      if (event.target.classList.contains('edit')) {
+     localStorage.setItem('postId', event.target.dataset.postid)
+     location = '/edit.html' 
+      }
+    })
 
-    async function renderPost({ title, body }) {
-      const postElem = document.createElement('div')
-      postElem.innerHTML = `
-              <div class="row bg-light p-5 rounded-md mb-2 mt-2">
-                <h3>${title}</h3>
-                <p class="lead">${body}</p>
-                <hr class="my-4">
-              </div>
-            `
-      document.getElementById('posts').prepend(postElem)
-    }
 
-    async function renderPosts() {
-      const { posts } = await getProfile()
-
-      posts.forEach(post => renderPost(post))
-    }
+    // const postElem = document.createElement('div')
+    // postElem.innerHTML = `
+    //       <div class="row bg-light p-5 rounded-md mb-2 mt-2">
+    //         <h3>${title}</h3>
+    //         <p class="lead">${body}</p>
+    //         <button> Delete </button>
+    //         <button class= "edit" data-postid> Edit </button>
+    //         <hr class="my-4">
+    //       </div>
+    //     `
+    // document.getElementById('posts').prepend(postElem)
 
     async function renderUsername() {
       const username = localStorage.getItem('username')
 
       document.getElementById('username').textContent = username
     }
-    let postId = localStorage.getItem('postId')
-    document.getElementById("editPost").addEventListener('click', event => {
-      event.preventDefault()
-      let editedPost = {
-        title: document.getElementById('title').value,
-        body: document.getElementById('body').value
-      }
-      axios.put(`/api/posts/${postId}`, editedPost, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-        .then(res => {
-          console.log(res.data)
-          console.log("edited")
-          Swal.fire({
-            icon: 'success',
-            title: 'Your Post Has Been Edited',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          window.setTimeout(function () {
-            location = "/profile.html";
-          }, 1000);
-        })
-    })
 
 
     document.getElementById('logout').addEventListener('click', logoutUser)
 
-    renderPosts()
+    getProfile()
     renderUsername()
 
 

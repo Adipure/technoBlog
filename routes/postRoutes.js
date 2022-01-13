@@ -28,8 +28,8 @@ router.put('/posts/:id', passport.authenticate('jwt'), async function (req, res)
 })
 
 // DELETE one post
-router.delete('/posts/:id',passport.authenticate('jwt'), async function ({ params: { id } }, res) {
-  await Post.destroy({ where: { id } })
+router.delete('/posts/:id',passport.authenticate('jwt'), async function (req, res) {
+  await Post.destroy({ where: { id: req.params.id } })
   res.sendStatus(200)
 })
 
