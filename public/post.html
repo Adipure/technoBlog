@@ -65,14 +65,27 @@
    })
     .then(res => {
      let post = res.data
+    //  console.log(post)
+    
      let postElem = document.createElement('div')
      postElem.innerHTML = `
         <h1> ${post.title} </h1>
         <h6> Posted by ${post.User.username} at ${post.User.createdAt.slice(0, -14)}</h6>
-        <p> ${post.body} <p>
+        <p> ${post.body} </p>
         `
 
      document.getElementById('myPost').append(postElem)
+     console.log(post.notes)
+     let notesArray = post.notes
+     notesArray.forEach(note => {
+       let noteElem = document.createElement('div')
+       noteElem.innerHTML= 
+       `
+       <p> ${note.body}</p>
+       `
+       document.getElementById('comments').append(noteElem)
+
+     });
     })
 
    function createComment() {
@@ -91,7 +104,7 @@
    document.getElementById("submitComment").addEventListener('click', event => {
     event.preventDefault()
     createComment()
-    getAllNotes()
+    // getAllNotes()
     location.reload()
    })
 
@@ -128,7 +141,7 @@
      })
    }
 
-   getAllNotes()
+  //  getAllNotes()
 
     function timedOut() {
       window.setTimeout(function () {
