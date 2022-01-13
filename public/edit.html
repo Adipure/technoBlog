@@ -80,10 +80,16 @@
    localStorage.removeItem('token')
    location = '/login.html'
   }
-
- 
-
  document.getElementById('logout').addEventListener('click', logoutUser)
+
+ function timedOut() {
+   window.setTimeout(function () {
+    localStorage.removeItem('token')
+    // Move to a new location or you can do something else
+    location = "/login.html";
+   }, 1000000);
+  }
+  timedOut()
 
 
  </script>

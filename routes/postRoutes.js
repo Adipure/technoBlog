@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Post, User } = require('../models')
+const { Post, User, Note } = require('../models')
 const passport = require('passport')
 
 // GET all posts

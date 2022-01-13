@@ -78,6 +78,38 @@
         location = '/login.html'
       }
     }
+    function getPosts() {
+
+      axios.get('/api/posts', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+
+      }).then(res => {
+        console.log(res.data)
+        let posts = res.data
+
+        posts.forEach(post => {
+          const postElem = document.createElement('div')
+          postElem.innerHTML = `
+              <div class="row bg-light p-5 rounded-md mb-2 mt-2">
+                <h3>${post.title}</h3>
+                <p class="lead">${post.body}</p>
+                <button class="comments" data-postid="${post.id}"> comments </button>
+                <hr class="my-4">
+              </div>
+            `
+          document.getElementById('posts').prepend(postElem)
+        });
+      })
+
+    }
+    document.addEventListener('click', event => {
+      if (event.target.classList.contains('comments')) {
+        localStorage.setItem('postId', event.target.dataset.postid)
+        location = '/post.html'
+      }
+    })
 
     async function createPost(data) {
       const { data: post } = await axios.post('/api/posts', data, {
@@ -87,25 +119,6 @@
       })
 
       return post
-    }
-
-    async function renderPost({ title, body, User: { username } }) {
-      const postElem = document.createElement('div')
-      postElem.innerHTML = `
-          <div class="row bg-light p-5 rounded-md mb-2 mt-2">
-            <h3>${title}</h3>
-            <p class="lead"><i>posted by ${username}</i></p>
-            <p class="lead">${body}</p>
-            <hr class="my-4">
-          </div>
-        `
-      document.getElementById('posts').prepend(postElem)
-    }
-
-    async function renderPosts() {
-      const posts = await getPosts()
-
-      posts.forEach(post => renderPost(post))
     }
 
     async function renderUsername() {
@@ -121,14 +134,19 @@
         title: document.getElementById('title').value,
         body: document.getElementById('body').value
       })
-
-      renderPost({ ...post, User: { username: localStorage.getItem('username') } })
     })
 
     document.getElementById('logout').addEventListener('click', logoutUser)
 
-    renderPosts()
+    getPosts()
     renderUsername()
+    function timedOut() {
+      window.setTimeout(function () {
+        localStorage.removeItem('token')
+        location = "/login.html";
+      }, 1000000);
+    }
+    timedOut()
   </script>
 </body>
 

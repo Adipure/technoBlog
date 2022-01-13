@@ -69,7 +69,7 @@
      postElem.innerHTML = `
         <h1> ${post.title} </h1>
         <h6> Posted by ${post.User.username} at ${post.User.createdAt.slice(0, -14)}</h6>
-        <p> ${post.content} <p>
+        <p> ${post.body} <p>
         `
 
      document.getElementById('myPost').append(postElem)
@@ -85,7 +85,7 @@
       'Authorization': `Bearer ${localStorage.getItem('token')}`
      }
     })
-     .then(res => {
+     .then(res => {console.log(res.data)
      })
    }
    document.getElementById("submitComment").addEventListener('click', event => {
@@ -107,7 +107,7 @@
    })
 
    function getAllNotes() {
-    axios.get(`/api/comments/${postId}`, {
+    axios.get(`/api/notes/${postId}`, {
      headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
      }
@@ -129,6 +129,15 @@
    }
 
    getAllNotes()
+
+    function timedOut() {
+      window.setTimeout(function () {
+       localStorage.removeItem('token')
+       // Move to a new location or you can do something else
+       location = "/login.html";
+      }, 1000000);
+     }
+     timedOut()
 
   </script>
 </body>
