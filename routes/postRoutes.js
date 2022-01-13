@@ -7,6 +7,10 @@ router.get('/posts', passport.authenticate('jwt'), async function (req, res) {
   const posts = await Post.findAll({ include: [User] })
   res.json(posts)
 })
+router.get('/posts/:id', passport.authenticate('jwt'), async function (req, res) {
+  const posts = await Post.findOne({ where: { id: req.params.id }, include: [User, Note] })
+  res.json(posts)
+})
 
 // POST one post
 router.post('/posts', passport.authenticate('jwt'), async function ({ body, user }, res) {
@@ -14,6 +18,12 @@ router.post('/posts', passport.authenticate('jwt'), async function ({ body, user
     ...body,
     uid: user.id
   })
+  res.json(post)
+})
+
+//Edit One post
+router.put('/posts/:id', passport.authenticate('jwt'), async function (req, res) {
+  const post = await Post.update(req.body, { where: { id: req.params.id } })
   res.json(post)
 })
 
