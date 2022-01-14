@@ -31,11 +31,15 @@
   Email: chanwoo1017@hotmail.com
 
 
-You are required to submit BOTH of the following for review:
+## Application preview
+
+![yWpx86SSc1](https://user-images.githubusercontent.com/88735341/149434365-bf5ebb0d-6713-4bf2-9385-db1cdccbd3b2.gif)
+
 
 * The URL of the functional, deployed application.
+https://trythisplease.herokuapp.com/
 
 * The URL of the GitHub repository, with a unique name and a readme describing the project.
-
+https://github.com/Adipure/technoBlog.git
 ---
 © 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
